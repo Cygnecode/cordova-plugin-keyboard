@@ -59,6 +59,11 @@
         self.disableScrollingInShrinkView = [(NSNumber*)[self settingForKey:setting] boolValue];
     }
 
+    setting = @"ForceScrollContentToBottom";
+    if ([self settingForKey:setting]) {
+      self.forceScrollContentToBottom = [(NSNumber*)[self settingForKey:setting] boolValue];
+    }
+
     NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
     __weak CDVKeyboard* weakSelf = self;
 
@@ -200,6 +205,10 @@ static IMP WKOriginalImp;
         self.webView.scrollView.scrollEnabled = !self.disableScrollingInShrinkView;
     }
 
+    if(self.forceScrollContentToBottom){
+        [self.webView.scrollView setContentOffset:CGPointMake(0, keyboardIntersection.size.height) animated:YES];
+    }
+
     // A view's frame is in its superview's coordinate system so we need to convert again
     self.webView.frame = [self.webView.superview convertRect:screen fromView:self.webView];
 }
@@ -237,6 +246,16 @@ static IMP WKOriginalImp;
     }
 
     self.disableScrollingInShrinkView = [value boolValue];
+}
+
+- (void)forceScrollContentToBottom:(CDVInvokedUrlCommand*)command
+{
+    id value = [command.arguments objectAtIndex:0];
+    if (!([value isKindOfClass:[NSNumber class]])) {
+        value = [NSNumber numberWithBool:NO];
+    }
+
+    self.forceScrollContentToBottom = [value boolValue];
 }
 
 - (void)hideFormAccessoryBar:(CDVInvokedUrlCommand*)command

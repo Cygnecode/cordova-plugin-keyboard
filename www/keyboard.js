@@ -22,7 +22,7 @@
 var argscheck = require('cordova/argscheck'),
     utils = require('cordova/utils'),
     exec = require('cordova/exec');
-   
+
 var Keyboard = function() {
 };
 
@@ -36,6 +36,10 @@ Keyboard.hideFormAccessoryBar = function(hide) {
 
 Keyboard.disableScrollingInShrinkView = function(disable) {
     exec(null, null, "Keyboard", "disableScrollingInShrinkView", [disable]);
+};
+
+Keyboard.forceScrollContentToBottom = function(disable) {
+    exec(null, null, "Keyboard", "forceScrollContentToBottom", [disable]);
 };
 
 Keyboard.fireOnShow = function() {
