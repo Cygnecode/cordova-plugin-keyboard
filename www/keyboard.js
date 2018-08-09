@@ -38,8 +38,16 @@ Keyboard.disableScrollingInShrinkView = function(disable) {
     exec(null, null, "Keyboard", "disableScrollingInShrinkView", [disable]);
 };
 
+Keyboard.disableScrolling = function(disable) {
+    exec(null, null, "Keyboard", "disableScrolling", [disable]);
+};
+
 Keyboard.forceScrollContentToBottom = function(disable) {
     exec(null, null, "Keyboard", "forceScrollContentToBottom", [disable]);
+};
+
+Keyboard.forceScrollContentToTop = function(disable) {
+    exec(null, null, "Keyboard", "forceScrollContentToTop", [disable]);
 };
 
 Keyboard.fireOnShow = function() {

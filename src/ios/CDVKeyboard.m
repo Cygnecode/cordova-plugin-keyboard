@@ -59,9 +59,19 @@
         self.disableScrollingInShrinkView = [(NSNumber*)[self settingForKey:setting] boolValue];
     }
 
+    setting = @"DisableScrolling";
+    if ([self settingForKey:setting]) {
+        self.disableScrolling = [(NSNumber*)[self settingForKey:setting] boolValue];
+    }
+
     setting = @"ForceScrollContentToBottom";
     if ([self settingForKey:setting]) {
       self.forceScrollContentToBottom = [(NSNumber*)[self settingForKey:setting] boolValue];
+    }
+
+    setting = @"ForceScrollContentToTop";
+    if ([self settingForKey:setting]) {
+      self.forceScrollContentToTop = [(NSNumber*)[self settingForKey:setting] boolValue];
     }
 
     NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
@@ -177,7 +187,7 @@ static IMP WKOriginalImp;
         return;
     }
 
-    self.webView.scrollView.scrollEnabled = YES;
+    self.webView.scrollView.scrollEnabled = !self.disableScrolling;
 
     CGRect screen = [[UIScreen mainScreen] bounds];
     CGRect statusBar = [[UIApplication sharedApplication] statusBarFrame];
@@ -207,6 +217,10 @@ static IMP WKOriginalImp;
 
     if(self.forceScrollContentToBottom){
         [self.webView.scrollView setContentOffset:CGPointMake(0, keyboardIntersection.size.height) animated:YES];
+    }
+
+    if(self.forceScrollContentToTop){
+        [self.webView.scrollView setContentOffset:CGPointMake(0, 0) animated:YES];
     }
 
     // A view's frame is in its superview's coordinate system so we need to convert again
@@ -248,6 +262,16 @@ static IMP WKOriginalImp;
     self.disableScrollingInShrinkView = [value boolValue];
 }
 
+- (void)disableScrolling:(CDVInvokedUrlCommand*)command
+{
+    id value = [command.arguments objectAtIndex:0];
+    if (!([value isKindOfClass:[NSNumber class]])) {
+        value = [NSNumber numberWithBool:NO];
+    }
+
+    self.disableScrolling = [value boolValue];
+}
+
 - (void)forceScrollContentToBottom:(CDVInvokedUrlCommand*)command
 {
     id value = [command.arguments objectAtIndex:0];
@@ -256,6 +280,16 @@ static IMP WKOriginalImp;
     }
 
     self.forceScrollContentToBottom = [value boolValue];
+}
+
+- (void)forceScrollContentToTop:(CDVInvokedUrlCommand*)command
+{
+    id value = [command.arguments objectAtIndex:0];
+    if (!([value isKindOfClass:[NSNumber class]])) {
+        value = [NSNumber numberWithBool:NO];
+    }
+
+    self.forceScrollContentToTop = [value boolValue];
 }
 
 - (void)hideFormAccessoryBar:(CDVInvokedUrlCommand*)command
